@@ -1,0 +1,15 @@
+#!/bin/bash
+
+case $# in
+
+1)
+chmod 777 abc.py
+sudo python abc.py $*
+;;
+
+*)
+echo "Invalid number of arguments;Only one argument required as URL"
+;;
+
+esac
+

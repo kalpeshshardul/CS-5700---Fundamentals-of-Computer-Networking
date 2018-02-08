@@ -1,0 +1,9 @@
+all: hello
+
+hello: archit.o sunaina.o
+
+sunaina.o: webcrawler.py
+        python program.py 001619458 AFH5OQTO
+
+archit.o: webcrawler 
+        ./webcrawler 001667559 76WM7N3G

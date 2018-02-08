@@ -1,0 +1,87 @@
+******************IMPORTANT****************
+Please use sudo to run the rawhttpget script
+1.First run the makefile to give the necessary permissions and to run the three ethtool commands to disable checksum offloading.
+2.run the file as ./rawhttpget <URL>
+
+############################################High Level Approach#############################################
+-->In this project we have implemented IP,TCP and Ethernet protocol stack.
+-->Raw sockets were used to form the protocol stacks.
+-->In this project we take one command line of URL to download the corresponding webpage or file and then save it to the current directory
+-->We implemented all features of IP packets and a subset of TCP functionality which includes checksums of incoming/outgoing packets,
+handling sequence and acknowledgement numbers,dealing with timeout, putting the out-of-order incoming packets into correct order,discarding duplicate packets as well as implementing a congestion window.
+-->We also build Ethernet frames for each packet dealing MAC resolution with ARP request.
+-->The code consists of different functions for each flags send during the transmission process.
+-->We have used URLPARSE at the start for handelling different exceptions in the terms of the url given as argument.
+-->Ethernet header,IP header and TCP header have been calculated using functions.
+-->In each layer, we will make a header by ourselves and combine it with data together then pass to the next level.
+-->First the program starts with the handshake and then the GET message is sent from our end to fetch the data related to the URL entered as argument.
+
+
+############################################Features Implemented#############################################
+1.TCP:
+-->We implemented the TCP pack header,checksum of incoming TCP packets and generate correct checksums for outgoing packets, performing the three-way handshake as well as handling connection teardown.
+-->We deal with acknowledgement sequence and sequence, dynamically setting the congestion window to implement congestion and control. -->We put out-of-order packets in the correct order and also implemented timeout functionality in the program.
+
+0                   1                   2                   3   
+    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |          Source Port          |       Destination Port        |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                        Sequence Number                        |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                    Acknowledgment Number                      |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |  Data |           |U|A|P|R|S|F|                               |
+   | Offset| Reserved  |R|C|S|S|Y|I|            Window             |
+   |       |           |G|K|H|T|N|N|                               |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |           Checksum            |         Urgent Pointer        |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                    Options                    |    Padding    |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                             data                              |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+2.IP:
+-->We implemented the IP pack header, and all features of IP packets:validating the checksum of incoming/outgoing packets,setting correct version,header length,total length and protocol identifier. 
+-->We query the IP of remote HTTP server and source machine to set the source and destination IP in outgoing packet.
+-->We also implemented validity check of IP headers, checksum and protocol identifier.
+
+0                   1                   2                   3   
+    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |Version|  IHL  |Type of Service|          Total Length         |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |         Identification        |Flags|      Fragment Offset    |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |  Time to Live |    Protocol   |         Header Checksum       |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                       Source Address                          |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                    Destination Address                        |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                    Options                    |    Padding    |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+3.Ethernet:
+-->We built Ethernet frames for each packet as well as IP and TCP headers, and we implemented MAC resolution with ARP requests.
+-->We sent the ARP header to find the destination MAC adress.
+-->Made the Ethernt header and inserted the header with the other TCP and IP packets.
+-->Calculated checksum also for the IP packet since we implemented the Ethenet header.
+##################################################Challenges#######################################
+
+-->Packing of the TCP and IP headers, IP checksum calculation and ARP implementation.
+-->Calculation of checksum and re-calculating again the checksum for validation of the received data from the server.
+-->We faced issues while generating the Ethernet header.
+-->It was difficult to make the ARP header and get the gateway MAC address.
+-->Combining the Ethernet, IP and TCP header was a challenge and took hard work to get through the send packet process.
+
+Task performed by the Group members:
+
+Vinay
+-->Wrote the algorithm for the GET data code.
+-->Provided his input regarding the TCP and IP header.
+-->Implemented the ARP header required for implementing the Ethernet header.
+Kalpesh
+-->Wrote the functions for the IP and TCP header.
+-->Wrote README and Makefile
